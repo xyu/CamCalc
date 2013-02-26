@@ -4,9 +4,9 @@ Calculator for camera focal distances
 
 ## Usage
 
-Include either CamCalc.js or CamCalc.min.js into your page then you will have access to the `CamCalc` object which allow the creation of 3 different calculators.
+Include either build/CamCalc.js or build/CamCalc.min.js into your page then you will have access to the `CamCalc` object, which allow the creation of 3 different calculators.
 
-Each calculators is instantiated with an settings array that contains data needed to perform it's particular function. Settings can be updated at anytime via the `updateSettings()` method as well. For example:
+Each calculator is instantiated with a settings array that contains data needed to perform its particular function. Settings can be updated at anytime via the `updateSettings()` method as well. For example:
 
 ```js
 var dof = new CamCalc.DepthOfField({
@@ -26,13 +26,13 @@ dof.calculate()
 
 ### CamCalc.DepthOfField()
 
-Calculates the depth of field that can be acheaved with the given camera, lens, and focal distnce used.
+Calculates the depth of field that can be achieved with the given camera, lens, and focal distance used.
 
 #### Options
 
 * `coc` (microns, default: 29)
 
-  The circle of confusion of your camera sensor (if you want maximum sharpness) given the same sized sensor, say 35mm full frame, the higher the resulution the smaller the coc.
+  The circle of confusion of your camera sensor (if you want maximum sharpness) given the same sized sensor, say 35mm full frame, the higher the resolution the smaller the coc.
 
 * `aperture` (f-number, default: 4)
 
@@ -61,7 +61,7 @@ Calculates the depth of field that can be acheaved with the given camera, lens, 
 
 ### CamCalc.IdealAperture()
 
-Calculates the ideal aperture given the lens and focal distnce used.
+Calculates the ideal aperture given the lens and focal distance used.
 
 #### Options
 
@@ -86,12 +86,12 @@ Calculates the ideal aperture given the lens and focal distnce used.
 * `calculate()`
 
   Returns an object with the following values
-  * `aperture` - The mathematically ideal f-number, which may not be an actual stop avaliable on your lens. (see below)
+  * `aperture` - The mathematically ideal f-number, which may not be an actual stop available on your lens. (See below)
   * `distance` - Distance in meters to focus to.
 
 ### CamCalc.ApertureSnap()
 
-`CamCalc.IdealAperture()` will proabaly return a f-number that you can't actually set on a real life lens. This will calculate what f-stop a f-number is closest to.
+`CamCalc.IdealAperture()` will probably return a f-number that you can't actually set on a real life lens. This will calculate what f-stop an f-number is closest to.
 
 #### Options
 
@@ -105,14 +105,14 @@ Calculates the ideal aperture given the lens and focal distnce used.
 
   Update calculator settings.
 
-* `calculate(f-number)`
-
-  Takes a f-number and returns an object with the following.
-  * `aperture` - The closest available f-stop.
-
 * `getStops(min f-number, max f-number)`
 
-  Takes min and max f-number then returns all the avaliable stops in-between.
+  Takes min and max f-number then returns all the available stops in-between.
+
+* `calculate(f-number)`
+
+  Takes an f-number and returns an object with the following.
+  * `aperture` - The closest available f-stop.
 
 ## License
 
