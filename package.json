@@ -1,6 +1,6 @@
 {
   "name": "CamCalc",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Calculator for camera focal distances",
   "main": "CamCalc.js",
   "dependencies": {},
@@ -14,8 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/xyu/CamCalc.git"
+    "url": "https://github.com/xyu/CamCalc"
   },
-  "author": "Xiao Yu",
+  "author": "Xiao Yu, @HypertextRanch",
   "license": "MIT"
 }
