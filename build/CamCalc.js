@@ -1,3 +1,13 @@
+/*!
+ * CamCalc v0.0.1
+ * Calculator for camera focal distances
+ * https://github.com/xyu/CamCalc
+ *
+ * Copyright 2013 Xiao Yu, @HypertextRanch
+ * Released under the MIT license
+ *
+ * Date: Tue Feb 26 2013 19:17:11
+ */
 (function() {
   var CamCalc, root, _ref;
 
