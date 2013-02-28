@@ -1,12 +1,12 @@
 /*!
- * CamCalc v0.0.1
+ * CamCalc v0.0.2
  * Calculator for camera focal distances
  * https://github.com/xyu/CamCalc
  *
  * Copyright 2013 Xiao Yu, @HypertextRanch
  * Released under the MIT license
  *
- * Date: Tue Feb 26 2013 19:17:11
+ * Date: Wed Feb 27 2013 19:42:52
  */
 (function() {
   var CamCalc, root, _ref;
@@ -20,6 +20,7 @@
 (function() {
 
   CamCalc.ApertureSnap = (function() {
+    var _calculateAV, _calculateN, _snapAV;
 
     function ApertureSnap(options) {
       this.steps = options.steps || 1 / 3;
@@ -33,20 +34,20 @@
 
     ApertureSnap.prototype.calculate = function(targetN) {
       var AV, snapAV;
-      AV = this._calculateAV(targetN);
-      snapAV = this._snapAV(AV);
+      AV = _calculateAV.call(this, targetN);
+      snapAV = _snapAV.call(this, AV);
       return {
-        aperture: this._calculateN(snapAV)
+        aperture: _calculateN.call(this, snapAV)
       };
     };
 
     ApertureSnap.prototype.getStops = function(minN, maxN) {
       var N, maxAV, minAV, stops;
-      minAV = this._snapAV(this._calculateAV(minN)) - this.steps;
-      maxAV = this._snapAV(this._calculateAV(maxN)) + this.steps;
+      minAV = _snapAV.call(this, _calculateAV.call(this, minN)) - this.steps;
+      maxAV = _snapAV.call(this, _calculateAV.call(this, maxN)) + this.steps;
       stops = [];
       while ((minAV += this.steps) <= maxAV) {
-        N = this._calculateN(minAV);
+        N = _calculateN.call(this, minAV);
         if (N >= minN && N <= maxN) {
           stops.push(N);
         }
@@ -54,11 +55,11 @@
       return stops;
     };
 
-    ApertureSnap.prototype._calculateAV = function(N) {
+    _calculateAV = function(N) {
       return Math.log(Math.pow(N, 2)) / Math.LN2;
     };
 
-    ApertureSnap.prototype._calculateN = function(AV) {
+    _calculateN = function(AV) {
       var N;
       N = Math.sqrt(Math.pow(2, AV));
       if (N >= 22.6 && N < 22.7) {
@@ -70,7 +71,7 @@
       return Math.round(N * 10) / 10;
     };
 
-    ApertureSnap.prototype._snapAV = function(targetAV) {
+    _snapAV = function(targetAV) {
       var AV, diff, max, min, snapAV, snapDiff, steps, _i, _len;
       min = Math.floor(targetAV) - this.steps;
       max = Math.floor(targetAV) + 1;
@@ -104,6 +105,7 @@
 (function() {
 
   CamCalc.DepthOfField = (function() {
+    var _calculateDepth, _calculateFocusSpread, _calculateLimitFar, _calculateLimitNear;
 
     function DepthOfField(options) {
       this.coc = (options.coc || 29) / 1000;
@@ -129,21 +131,21 @@
 
     DepthOfField.prototype.calculate = function() {
       var Uf, Un, dV;
-      dV = this._calculateFocusSpread(this.coc, this.aperture);
-      Un = this._calculateLimitNear(dV, this.focalLength, this.distance);
-      Uf = this._calculateLimitFar(Un, this.distance);
+      dV = _calculateFocusSpread.call(this, this.coc, this.aperture);
+      Un = _calculateLimitNear.call(this, dV, this.focalLength, this.distance);
+      Uf = _calculateLimitFar.call(this, Un, this.distance);
       return {
         nearLimit: Un / 1000,
         farLimit: Uf / 1000,
-        depth: this._calculateDepth(Un, Uf) / 1000
+        depth: _calculateDepth.call(this, Un, Uf) / 1000
       };
     };
 
-    DepthOfField.prototype._calculateFocusSpread = function(c, N) {
+    _calculateFocusSpread = function(c, N) {
       return N * Math.sqrt(562500 * Math.pow(c, 2) - Math.pow(N, 2)) / 375;
     };
 
-    DepthOfField.prototype._calculateLimitNear = function(dV, f, U) {
+    _calculateLimitNear = function(dV, f, U) {
       var denominator, numerator1, numerator2, sqrtInner1, sqrtInner2;
       sqrtInner1 = Math.pow(U - f, 2) * Math.pow(dV, 2);
       sqrtInner2 = Math.pow(f, 2) * Math.pow(U, 2);
@@ -153,14 +155,14 @@
       return (numerator1 + numerator2) / denominator;
     };
 
-    DepthOfField.prototype._calculateLimitFar = function(Un, U) {
+    _calculateLimitFar = function(Un, U) {
       if (2 * Un <= U) {
         return Infinity;
       }
       return (Un * U) / (2 * Un - U);
     };
 
-    DepthOfField.prototype._calculateDepth = function(Un, Uf) {
+    _calculateDepth = function(Un, Uf) {
       if (!isFinite(Uf)) {
         return Infinity;
       }
@@ -176,12 +178,13 @@
 (function() {
 
   CamCalc.IdealAperture = (function() {
+    var _calculateAperture, _calculateDistance, _swapDistances;
 
     function IdealAperture(options) {
       this.focalLength = options.focalLength || 50;
       this.objectNear = (options.objectNear || 4) * 1000;
       this.objectFar = (options.objectFar || 5) * 1000;
-      this._swapDistances();
+      _swapDistances.call(this);
     }
 
     IdealAperture.prototype.updateSettings = function(options) {
@@ -194,25 +197,25 @@
       if (options.objectFar) {
         this.objectFar = options.objectFar * 1000;
       }
-      return this._swapDistances();
+      return _swapDistances.call(this);
     };
 
     IdealAperture.prototype.calculate = function() {
       return {
-        aperture: this._calculateAperture(this.objectNear, this.objectFar, this.focalLength),
-        distance: this._calculateDistance(this.objectNear, this.objectFar) / 1000
+        aperture: _calculateAperture.call(this, this.objectNear, this.objectFar, this.focalLength),
+        distance: _calculateDistance.call(this, this.objectNear, this.objectFar) / 1000
       };
     };
 
-    IdealAperture.prototype._calculateAperture = function(Un, Uf, f) {
+    _calculateAperture = function(Un, Uf, f) {
       return Math.sqrt(375 * ((Un * f) / (Un - f) - (Uf * f) / (Uf - f)));
     };
 
-    IdealAperture.prototype._calculateDistance = function(Un, Uf) {
+    _calculateDistance = function(Un, Uf) {
       return (2 * Un * Uf) / (Un + Uf);
     };
 
-    IdealAperture.prototype._swapDistances = function() {
+    _swapDistances = function() {
       var tmp;
       if (this.objectNear <= this.objectFar) {
         return;
