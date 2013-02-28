@@ -12,24 +12,24 @@ class CamCalc.DepthOfField
     @distance    = options.distance * 1000 if options.distance
 
   calculate: ->
-    dV = this._calculateFocusSpread(@coc, @aperture)
-    Un = this._calculateLimitNear(dV, @focalLength, @distance)
-    Uf = this._calculateLimitFar(Un, @distance)
+    dV = _calculateFocusSpread.call(this, @coc, @aperture)
+    Un = _calculateLimitNear.call(this, dV, @focalLength, @distance)
+    Uf = _calculateLimitFar.call(this, Un, @distance)
     
     return {
       nearLimit: Un / 1000,
       farLimit: Uf / 1000,
-      depth: this._calculateDepth(Un, Uf) / 1000,
+      depth: _calculateDepth.call(this, Un, Uf) / 1000,
     }
 
-  _calculateFocusSpread: (c, N) ->
+  _calculateFocusSpread= (c, N) ->
     #       N * sqrt( 562500 * c^2 - N^2 )
     # dV = --------------------------------
     #                    375
     
     return N * Math.sqrt( 562500 * Math.pow(c, 2) - Math.pow(N, 2) ) / 375
 
-  _calculateLimitNear: (dV, f, U) ->
+  _calculateLimitNear= (dV, f, U) ->
     #       f * sqrt( (U-f)^2 * dV^2 + f^2 * U^2 ) + f^2 * U - f^2 * dV
     # Un = -------------------------------------------------------------
     #                       ( U - 2*f ) * dV + 2 * f^2
@@ -43,7 +43,7 @@ class CamCalc.DepthOfField
 
     return (numerator1 + numerator2) / denominator
 
-  _calculateLimitFar: (Un, U) ->
+  _calculateLimitFar= (Un, U) ->
     #         Un * U
     # Uf = ------------
     #       2 * Un - U
@@ -51,6 +51,6 @@ class CamCalc.DepthOfField
     return Infinity if 2 * Un <= U
     return (Un * U) / (2 * Un - U)
 
-  _calculateDepth: (Un, Uf)->
+  _calculateDepth= (Un, Uf)->
     return Infinity if !isFinite(Uf)
     return Uf - Un

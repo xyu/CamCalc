@@ -1,6 +1,6 @@
 {
   "name": "CamCalc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Calculator for camera focal distances",
   "main": "CamCalc.js",
   "dependencies": {},
