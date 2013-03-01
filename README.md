@@ -58,6 +58,7 @@ Calculates the depth of field that can be achieved with the given camera, lens, 
   * `depth` - Total distance between near and far focal points.
   * `farLimit` - Distance to the far focal point.
   * `nearLimit` - Distance to the near focal point.
+  * `distance` - The distance to the object you are focusing on.
 
 ### CamCalc.Hyperfocal()
 

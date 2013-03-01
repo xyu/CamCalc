@@ -17,6 +17,7 @@ class CamCalc.DepthOfField
     Uf = _calculateLimitFar.call(this, Un, @distance)
     
     return {
+      distance: @distance / 1000,
       nearLimit: Un / 1000,
       farLimit: Uf / 1000,
       depth: _calculateDepth.call(this, Un, Uf) / 1000,
