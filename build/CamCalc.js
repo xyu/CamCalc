@@ -1,12 +1,12 @@
 /*!
- * CamCalc v0.0.2
+ * CamCalc v0.0.3
  * Calculator for camera focal distances
  * https://github.com/xyu/CamCalc
  *
  * Copyright 2013 Xiao Yu, @HypertextRanch
  * Released under the MIT license
  *
- * Date: Wed Feb 27 2013 19:42:52
+ * Date: Thu Feb 28 2013 19:39:53
  */
 (function() {
   var CamCalc, root, _ref;
@@ -135,6 +135,7 @@
       Un = _calculateLimitNear.call(this, dV, this.focalLength, this.distance);
       Uf = _calculateLimitFar.call(this, Un, this.distance);
       return {
+        distance: this.distance / 1000,
         nearLimit: Un / 1000,
         farLimit: Uf / 1000,
         depth: _calculateDepth.call(this, Un, Uf) / 1000
@@ -170,6 +171,50 @@
     };
 
     return DepthOfField;
+
+  })();
+
+}).call(this);
+
+(function() {
+
+  CamCalc.Hyperfocal = (function() {
+    var _calculateHyperfocalDistance;
+
+    function Hyperfocal(options) {
+      this.coc = (options.coc || 29) / 1000;
+      this.aperture = options.aperture || 4;
+      this.focalLength = options.focalLength || 50;
+    }
+
+    Hyperfocal.prototype.updateSettings = function(options) {
+      if (options.coc) {
+        this.coc = options.coc / 1000;
+      }
+      if (options.aperture) {
+        this.aperture = options.aperture;
+      }
+      if (options.focalLength) {
+        return this.focalLength = options.focalLength;
+      }
+    };
+
+    Hyperfocal.prototype.calculate = function() {
+      var H;
+      H = _calculateHyperfocalDistance.call(this, this.focalLength, this.aperture, this.coc);
+      return {
+        distance: H / 1000,
+        nearLimit: H / 2000,
+        farLimit: Infinity,
+        depth: Infinity
+      };
+    };
+
+    _calculateHyperfocalDistance = function(f, N, c) {
+      return (Math.pow(f, 2) / (N * c)) + f;
+    };
+
+    return Hyperfocal;
 
   })();
 
