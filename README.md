@@ -59,6 +59,38 @@ Calculates the depth of field that can be achieved with the given camera, lens, 
   * `farLimit` - Distance to the far focal point.
   * `nearLimit` - Distance to the near focal point.
 
+### CamCalc.Hyperfocal()
+
+Calculates the hyperfocal distance (the closest focal point at which infinity is in focus) of the given camera and lens used.
+
+#### Options
+
+* `coc` (microns, default: 29)
+
+  The circle of confusion of your camera sensor (if you want maximum sharpness) given the same sized sensor, say 35mm full frame, the higher the resolution the smaller the coc.
+
+* `aperture` (f-number, default: 4)
+
+  The aperture of the lens you are using for the shot.
+
+* `focalLength` (mm, default: 50)
+
+  The focal length of the lens you are using.
+
+#### Methods
+
+* `updateSettings()`
+
+  Update calculator settings.
+
+* `calculate()`
+
+  Returns an object with values in meters
+  * `depth` - Always infinity by definition.
+  * `farLimit` - Always infinity by definition.
+  * `nearLimit` - Distance to the near focal point.
+  * `distance` - The hyperfocal distance.
+
 ### CamCalc.IdealAperture()
 
 Calculates the ideal aperture given the lens and focal distance used.
